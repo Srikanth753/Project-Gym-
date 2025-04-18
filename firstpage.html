@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sk's Akatsuki Gym Registration</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+            color: #eee;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            width: 100%;
+            gap: 20px;
+        }
+        .left-side, .right-side {
+            padding: 20px;
+            background: #2c2c2c;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+        }
+        h1, h2 {
+            text-align: center;
+            font-weight: bold;
+            color: #ff4d6d;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input, textarea, select, button {
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #444;
+            border-radius: 5px;
+            font-size: 16px;
+            background: #3a3a3a;
+            color: #fff;
+        }
+        button {
+            background: #ff4d6d;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(255, 77, 109, 0.3);
+        }
+        button:hover {
+            background: #ff1a4d;
+        }
+        .plan-list ul {
+            list-style: none;
+            padding: 0;
+        }
+        .plan-list ul li {
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            margin: 10px 0;
+            background: #3a3a3a;
+            color: #eee;
+        }
+        .help-service a {
+            color: #ff4d6d;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .help-service a:hover {
+            text-decoration: underline;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: #2c2c2c;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            margin: 10% auto;
+        }
+        .next-page {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-side">
+            <h1>Welcome to Sk's Akatsuki Gym</h1>
+            <h2>Register Now</h2>
+            <form id="registrationForm">
+                <input type="text" id="name" placeholder="Name" required>
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="tel" id="mobile" placeholder="Mobile Number" required>
+                <textarea id="address" placeholder="Address" required></textarea>
+                <input type="text" id="aadhaar" placeholder="Aadhaar Card Number" pattern="\d{12}" required>
+                <select id="plan" required>
+                    <option value="" disabled selected>Select a plan</option>
+                    <option value="1-month">1 Month - ₹700</option>
+                    <option value="2-months">2 Months - ₹1400</option>
+                    <option value="3-months">3 Months - ₹2000</option>
+                    <option value="1-year">1 Year - ₹7500</option>
+                </select>
+                <button type="button" onclick="registerMember()">Register Now</button>
+            </form>
+            <div id="paymentOption" style="display:none;">
+                <h2>Choose Payment Method</h2>
+                <button onclick="showQRCode()">Pay by QR Code</button>
+            </div>
+            <div id="paymentSection" style="display:none;">
+                <h2>Complete Your Payment</h2>
+                <img src="Qr code.jpg" alt="QR Code for Payment">
+                <p>Processing your payment... Waiting for approval.</p>
+                <button onclick="goBackToRegistration()">Back to Registration</button>
+            </div>
+        </div>
+        <div class="right-side">
+            <div class="plan-list">
+                <h3>Available Plans</h3>
+                <ul>
+                    <li>1 Month - ₹700</li>
+                    <li>2 Months - ₹1400</li>
+                    <li>3 Months - ₹2000</li>
+                    <li>1 Year - ₹7500</li>
+                </ul>
+            </div>
+            <div class="help-service">
+                <h3>Need Help?</h3>
+                <p><a href="javascript:void(0);" onclick="openHelpModal()">Contact our support team</a></p>
+                <div class="quote-list">
+                    <p>"Strong today, stronger tomorrow."</p>
+                    <p>"No pain, no gain."</p>
+                    <p>"Push yourself, because no one else is going to do it for you."</p>
+                    <p>"Success starts with self-discipline."</p>
+                    <p>"The only bad workout is the one you didn’t do."</p>
+                </div>
+                <div class="next-page">
+                    <a href="page2.html">
+                        <button onclick="window.location.href='page2.html'">Next Page</button>
+
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <h3>Describe Your Issue</h3>
+            <textarea id="issueText" placeholder="Write your issue here..." rows="4" style="width: 100%;"></textarea>
+            <br>
+            <button onclick="submitIssue()">Submit</button>
+            <button onclick="closeHelpModal()">Close</button>
+        </div>
+    </div>
+    <script>
+        const planSelect = document.getElementById('plan');
+        planSelect.addEventListener('change', () => {
+            const selectedPlan = planSelect.options[planSelect.selectedIndex].text;
+            alert(`You selected: ${selectedPlan}`);
+        });
+    
+        function registerMember() {
+            const form = document.getElementById('registrationForm');
+            if (form.checkValidity()) {
+                if (confirm('Are you sure you want to proceed with registration?')) {
+    
+                    // ✅ Save user input to localStorage for use on the next page
+                    localStorage.setItem("name", document.getElementById("name").value);
+                    localStorage.setItem("email", document.getElementById("email").value);
+                    localStorage.setItem("mobile", document.getElementById("mobile").value);
+                    localStorage.setItem("address", document.getElementById("address").value);
+                    localStorage.setItem("aadhaar", document.getElementById("aadhaar").value);
+                    localStorage.setItem("plan", document.getElementById("plan").value);
+    
+                    // ✅ Then show payment option
+                    alert('Registration initiated. Please choose a payment method.');
+                    document.getElementById('paymentOption').style.display = 'block';
+                }
+            }
+        }
+    
+        function showQRCode() {
+            document.getElementById('paymentOption').style.display = 'none';
+            document.getElementById('paymentSection').style.display = 'block';
+        }
+    
+        function goBackToRegistration() {
+            document.getElementById('paymentSection').style.display = 'none';
+            document.getElementById('paymentOption').style.display = 'block';
+        }
+    
+        function openHelpModal() {
+            document.getElementById('helpModal').style.display = 'block';
+        }
+    
+        function closeHelpModal() {
+            document.getElementById('helpModal').style.display = 'none';
+        }
+    
+        function submitIssue() {
+            const issueText = document.getElementById('issueText').value;
+            if (issueText) {
+                alert('Your issue has been submitted successfully.');
+                closeHelpModal();
+            }
+        }
+    </script>
+    
+</body>
+</html>
