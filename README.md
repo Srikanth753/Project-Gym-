@@ -1,2 +1,2 @@
 # Project-Gym-
-The main  motive of this project to achieve of our Dream Physique
+The main  motive of this project to achieve  our Dream Physique
